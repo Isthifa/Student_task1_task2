@@ -22,14 +22,29 @@ public class StudentDemoApplication {
 	{
 		return runner->
 		{
-			readStudentbyId(studentDAO);
+			updateStudent(studentDAO);
 		};
 	}
 
-	private void readStudentbyId(StudentDAO studentDAO) {
+	private void updateStudent(StudentDAO studentDAO) {
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Enter student id to update");
+		int id=sc.nextInt();
+		Student student=studentDAO.findById(id);
+		student.setFirstName("isthifa");
+		studentDAO.update(student);
+		System.out.println("Student updated "+student.getId());
+	}
+
+	private void readStudentbyId(StudentDAO studentDAO)  {
 		Scanner sc=new Scanner(System.in);
 		System.out.println("Enter the student id");
+		List<Student> students=studentDAO.findAll();
 		int a=sc.nextInt();
+		if(a>students.size() || a<=0)
+		{
+			throw new RuntimeException("Student id is invalid");
+		}
 		Student student=studentDAO.findById(a);
 		System.out.println(student);
 	}
@@ -57,12 +72,20 @@ public class StudentDemoApplication {
 		}
 	}
 
-	private void deleteStudent(StudentDAO studentDAO) {
+	private void deleteStudent(StudentDAO studentDAO)  {
 		System.out.println("Enter the student id to delete");
 		//creating scanner object
 		Scanner input=new Scanner(System.in);
 		int a=input.nextInt();
-		studentDAO.delete(a);
+		List<Student> tempstudent=studentDAO.findAll();
+		if(a<0 || a>tempstudent.size())
+		{
+			throw new RuntimeException("Student id is invalid");
+		}
+		else
+		{
+			studentDAO.delete(a);
+		}
 		System.out.println("Student delete "+a);
 	}
 
